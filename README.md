@@ -1,3 +1,4 @@
+
 # Power Portfolio Positions and Cash Flows
 
 A modular Python model that links half-hourly electricity generation and customer consumption to wholesale market positions, required purchases or sales, and market cash flows.
@@ -37,6 +38,7 @@ purchase_cost_gbp = purchase_mwh * price_gbp_per_mwh
 sale_revenue_gbp = sale_mwh * price_gbp_per_mwh
 
 net_market_cash_flow_gbp = sale_revenue_gbp - purchase_cost_gbp
+
 ```
 
 Transactions are settled independently for each period. This version has no storage, trading fees, or price-responsive generation/demand.
@@ -46,7 +48,7 @@ Transactions are settled independently for each period. This version has no stor
 The CSV input contains six columns:
 
 | Column | Description |
-|---|---|
+| --- | --- |
 | `delivery_date` | Delivery date |
 | `settlement_period` | Period number 1–48 |
 | `wind_mwh` | Wind generation during the half-hour |
@@ -58,34 +60,34 @@ The reference dataset is illustrative and uses reproducible sample inputs. Energ
 
 ## Reference Results
 
-Results below correspond to the supplied reference input and are rounded for display.
+Results below correspond to the supplied reference input (`2026-09-01`, seed `42`) and are rounded for display.
 
 | Metric | Value |
-|---|---:|
-| Wind generation | 499.81 MWh |
-| Solar PV generation | 72.00 MWh |
-| Combined generation | 571.81 MWh |
-| Customer consumption | 554.67 MWh |
-| Pre-trade position | +17.14 MWh |
-| Wholesale purchases | 62.67 MWh |
-| Wholesale sales | 79.81 MWh |
-| Purchase cost | £6,085.54 |
-| Sale revenue | £5,648.26 |
-| **Net wholesale market cash flow** | **-£437.28** |
-| Long / Short / Balanced periods | 29 / 19 / 0 |
-| Volume-weighted purchase price | £97.10/MWh |
-| Volume-weighted sale price | £70.77/MWh |
+| --- | --- |
+| Wind generation | 648.73 MWh |
+| Solar PV generation | 96.00 MWh |
+| Combined generation | 744.73 MWh |
+| Customer consumption | 666.02 MWh |
+| Pre-trade net position | +78.71 MWh |
+| Wholesale purchases | 73.12 MWh |
+| Wholesale sales | 151.83 MWh |
+| Purchase cost | £8,419.88 |
+| Sale revenue | £10,890.77 |
+| **Net wholesale market cash flow** | **+£2,470.88** |
+| Long / Short / Balanced periods | 30 / 18 / 0 |
+| Volume-weighted purchase price | £115.15/MWh |
+| Volume-weighted sale price | £71.73/MWh |
 
-The largest physical shortage occurs in period 38, while the largest cash outflow occurs in period 37 because cash flow depends on both traded volume and price.
+The largest physical shortage occurs in period 38 (9.37 MWh), while the largest cash outflow occurs in period 37 (-£1,182.06) due to elevated evening wholesale prices (£134.02/MWh).
 
 ## Visual Outputs
 
 Running the main pipeline generates four charts:
 
-- **Generation & Demand** — wind, solar, combined generation, and customer consumption.
-- **Portfolio Positions** — LONG and SHORT positions before market trades.
-- **Wholesale Prices** — assumed half-hourly price profile.
-- **Market Cash Flows** — cash inflows and outflows by settlement period.
+* **Generation & Demand** — wind, solar, combined generation, and customer consumption.
+* **Portfolio Positions** — LONG and SHORT positions before market trades.
+* **Wholesale Prices** — assumed half-hourly price profile.
+* **Market Cash Flows** — cash inflows and outflows by settlement period.
 
 Outputs are saved in `outputs/`.
 
@@ -108,7 +110,8 @@ power_portfolio/
 ├── README.md
 ├── data/
 │   └── portfolio_inputs_2026-09-01.csv
-├── outputs/
+└── outputs/
+
 ```
 
 ## Installation and Usage
@@ -117,41 +120,43 @@ Install dependencies:
 
 ```bash
 pip install -r requirements.txt
+
 ```
 
 Run the main analysis:
 
 ```bash
 python main.py
+
 ```
 
 Run price scenarios and sensitivity examples:
 
 ```bash
 python price_examples.py
+
 ```
 
 Run the automated tests:
 
 ```bash
 pytest
+
 ```
 
 ## Limitations
 
 This model intentionally represents a simplified portfolio cash-flow framework. It does not include:
 
-- Battery storage or intertemporal optimization
-- Trading or transaction fees
-- Bid/offer spreads
-- Forecast uncertainty
-- Imbalance-price mechanisms
-- Network constraints
-- Curtailment
-- Asset degradation
-- Taxes or full company-level P&L
-- Live market execution
+* Battery storage or intertemporal optimization
+* Trading or transaction fees
+* Bid/offer spreads
+* Forecast uncertainty
+* Imbalance-price mechanisms
+* Network constraints
+* Curtailment
+* Asset degradation
+* Taxes or full company-level P&L
+* Live market execution
 
 It is therefore best treated as a transparent foundation for extending the model toward more advanced electricity-market and portfolio analysis.
-
-
